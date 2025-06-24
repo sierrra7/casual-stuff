@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIKO's Date Idea Generator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fce38a, #f38181); /* Warm, inviting gradient */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+        .generate-button {
+            background-image: linear-gradient(to right, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-radius: 9999px; /* Fully rounded */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .generate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background-image: linear-gradient(to right, #f88c6e, #ec5f96, #41b9e0, #41e0c2); /* Slightly brighter on hover */
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 md:p-8">
+
+    <div class="card bg-white p-8 md:p-10 rounded-xl max-w-lg w-full text-center flex flex-col items-center">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">💖 Date Night Ideas for Us 💖</h1>
+
+        <!-- Display area for the date idea -->
+        <p id="dateIdea" class="text-xl md:text-2xl text-gray-700 font-semibold mb-8 min-h-[80px] flex items-center justify-center text-balance">
+            Click the button below to get a fun date idea!
+        </p>
+
+        <!-- Button to generate new ideas -->
+        <button id="generateBtn" class="generate-button focus:outline-none focus:ring-4 focus:ring-pink-300 transform active:scale-95">
+            Get New Idea!
+        </button>
+    </div>
+
+    <script>
+        // Array of fun date ideas
+        const dateIdeas = [
+            // General Ideas
+            "Have a themed movie night at home (e.g., 80s, rom-coms, sci-fi).",
+            "Cook a new recipe together from a different cuisine.",
+            "Go for a scenic hike or a long walk in a beautiful park.",
+            "Have a board game or card game marathon.",
+            "Visit a local art gallery or museum.",
+            "Have a picnic in a scenic spot.",
+            "Go stargazing on a clear night.",
+            "Try a new coffee shop or bakery.",
+            "Volunteer together for a cause you both care about.",
+            "Go bowling or play mini-golf.",
+            "Have a DIY spa night at home.",
+            "Create a joint playlist of your favorite songs.",
+            "Attend a local concert or live music event.",
+            "Go rollerblading or ice skating.",
+            "Have a themed dessert tasting night.",
+            "Visit a local farmers' market and cook with your finds.",
+            "Do a puzzle together.",
+            "Go to an arcade.",
+            "Have a 'MasterChef' style cooking competition at home.",
+            "Watch the sunrise or sunset together.",
+            "Do a creative project together (e.g., paint, draw, write).",
+            "Explore a new neighborhood or town.",
+            "Have a cozy night in with hot cocoa and a good book/movie.",
+            "Go fruit picking (seasonal).",
+            "Attend a local sports game.",
+            "Learn a few phrases in a new language together.",
+            "Have a 'build your own' pizza/taco/burger night.",
+            "Visit a botanical garden.",
+            "Go for a bike ride.",
+            "Have a themed cocktail/mocktail night.",
+            "Go to a local festival or fair.",
+            "Do a workout class together.",
+            "Have a dream planning session for future goals.",
+            "Visit an animal shelter or local pet store.",
+            "Go thrifting and challenge each other to find the best item.",
+            "Have a blind taste test of different snacks.",
+            "Write each other love letters or appreciation notes.",
+            "Go on a scenic drive with your favorite music.",
+            "Have a 'Yes Day' where you both say yes to each other's ideas for a set period.",
+
+            // Mumbai Specific Ideas
+            "Take a romantic stroll along Marine Drive, also known as the Queen's Necklace, especially at sunset.",
+            "Enjoy street food at Juhu Beach or Girgaum Chowpatty.",
+            "Visit the iconic Gateway of India and take some memorable photos.",
+            "Explore the historical Bandra Fort for great views of the Sea Link and Arabian Sea.",
+            "Go for a peaceful walk or boat ride at Powai Lake.",
+            "Wander through the colourful lanes of Colaba Causeway and do some street shopping.",
+            "Visit the serene Global Vipassana Pagoda.",
+            "Explore the ancient rock-cut Kanheri Caves in Sanjay Gandhi National Park.",
+            "Take a ferry ride to Elephanta Caves for a day of adventure and history.",
+            "Spend an evening at Worli Sea Face, enjoying the sea breeze and views.",
+            "Visit the Hanging Gardens on Malabar Hill for a peaceful retreat and city views.",
+            "Take a heritage walk through the Fort area and admire the Victorian architecture.",
+            "Grab a late-night coffee at a cafe overlooking Marine Drive.",
+            "Explore the vibrant art galleries in the Kala Ghoda district.",
+            "Go for an early morning jog or walk at Bandra Bandstand.",
+            "Try authentic Iranian cuisine at a traditional Parsi cafe.",
+            "Experience the bustling atmosphere of Crawford Market or Chor Bazaar.",
+            "Witness the unique operations at Dhobi Ghat.",
+            "Take a local train ride for an authentic Mumbai experience (during off-peak hours!).",
+            "Visit the Shree Siddhivinayak Temple for a spiritual experience."
+        ];
+
+        const dateIdeaElement = document.getElementById('dateIdea');
+        const generateButton = document.getElementById('generateBtn');
+
+        /**
+         * Function to get a random date idea from the array.
+         * Ensures the new idea is different from the current one if possible.
+         */
+        function getRandomDateIdea() {
+            let newIdea = "";
+            let currentIndex = -1; // Initialize with an invalid index
+            const currentIdea = dateIdeaElement.textContent.trim();
+
+            if (dateIdeas.length === 1) {
+                return dateIdeas[0]; // If only one idea, just return it
+            }
+
+            // Loop until a new idea is found that is different from the current one
+            do {
+                const randomIndex = Math.floor(Math.random() * dateIdeas.length);
+                newIdea = dateIdeas[randomIndex];
+                currentIndex = randomIndex;
+            } while (newIdea === currentIdea && dateIdeas.length > 1); // Only repeat if there's more than one idea
+
+            return newIdea;
+        }
+
+        // Event listener for the button click
+        generateButton.addEventListener('click', () => {
+            dateIdeaElement.textContent = getRandomDateIdea();
+        });
+    </script>
+</body>
+</html>
